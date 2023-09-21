@@ -24,4 +24,26 @@ blue_laser = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
 yellow_laser = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"))
 
 # Background.
-bg = pygame.image.load(os.path.join("assets", "background-black.png"))
+bg = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+
+# Game loop function
+def main_loop():
+    run = True
+    fps = 60
+    level = 1
+    lives = 3
+    clock = pygame.time.Clock()
+
+    def redraw_window():
+        win.blit(bg, (0,0))
+        pygame.display.update()
+
+    while run:
+        clock.tick(fps)
+        redraw_window()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+main_loop()
