@@ -116,7 +116,16 @@ class Player(Ship):
                 for object in objects:
                     if laser.collision(object):
                         objects.remove(object)
-                        self.lasers.remove(laser)
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
+
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
 
 # Enemy class.
 class Enemy(Ship):
@@ -207,7 +216,7 @@ def main_loop():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                quit()
 
         # Moving the player keys.
         keys = pygame.key.get_pressed()
@@ -238,5 +247,20 @@ def main_loop():
 
         player.move_lasers(-laser_vel, enemies)
 
+def main_menu():
+    title_font = pygame.font.SysFont("comicsans", 20)
+    run = True
 
-main_loop()
+    while run:
+        win.blit(bg, (0, 0))
+        title_label = title_font.render("Press the mouse to begin..", 1, (255, 255, 255))
+        win.blit(title_label, (WIDTH / 2 - title_label.get_width() / 2, 350))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                main_loop()
+    pygame.quit()
+
+main_menu()
